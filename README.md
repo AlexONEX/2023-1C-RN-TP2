@@ -1,0 +1,16 @@
+# 2023-1C-RN-TP2
+# Redes Neuronales Artificiales
+## Trabajo Práctico 2
+
+### 1. Introducción
+El objetivo de este trabajo práctico es utilizar distintos modelos de redes neuronales artificiales sobre el mismo conjunto de datos para una tarea de clasificación. Todos los modelos estarán basados en variantes de aprendizaje no supervisado. Los datos pertenecen a un problema real y es posible que las categorías no estén claramente diferenciadas. Se espera que, respetando las consignas, se construyan modelos adecuados para cada problema, que puedan aprender sobre las instancias de entrenamiento y que tengan una capacidad aceptable para generalizar sobre otras. Tanto la arquitectura de los modelos, la elección de parámetros, las técnicas de entrenamiento y testeo, y los métodos para presentar los resultados deberán ser documentados y entregados en un informe en donde se deberán justificar las decisiones tomadas y explicados los resultados obtenidos.
+
+### 2. Problema
+El conjunto de datos consiste en documentos con descripciones de texto correspondientes a compañías Brasileñas clasificadas en nueve categorías distintas. Los textos originales fueron preprocesados para obtener un tipo de representación conocida como Bolsa de Palabras (Bag-of-Words, o simplemente BoW). En este tipo de formato cada documento es representado mediante un vector en donde cada dimensión corresponde a una palabra específica y su valor está dado por la cantidad de apariciones de esa palabra en el documento. Para mejorar la representación las palabras más comunes (artículos, preposiciones, etc.) no son tenidas en cuenta. Notar que al representar un documento de esta forma no se está teniendo en cuenta el orden de las palabras, solo su frecuencia de aparición.
+
+El conjunto de datos se encuentra en formato CSV sin encabezado y contiene 900 entradas distribuidas uniformemente entre las 9 categorías. Cada entrada representa un documento y consiste en el número de categoría (1 a 9) más 850 atributos correspondientes a apariciones de palabras. Tener en cuenta que el conjunto de datos es disperso (casi todos los valores son ceros) y que el número de categoría corresponde a la actividad principal de la empresa, no necesariamente la única.
+
+El problema a resolver será clasificar automáticamente los documentos utilizando distintos modelos de aprendizaje hebbiano no supervisado y competitivo. Notar que, por tratarse de aprendizaje no supervisado, para el entrenamiento solo se deben utilizar los valores de las frecuencias de palabras, la información de la categoría solo será utilizada para verificar la clasificación hecha por los modelos.
+
+#### 2.1. Reducción de dimensiones
+Construir un modelo de red neuronal artificial con una arquitectura que permita reducir la alta dimensionalidad de las entradas en el conjunto de datos a solo 9 dimensiones. Para efectuar la reducción de dimensión, entrenar al modelo mediante las reglas de aprendizaje de Oja y de Sanger. Una vez realizado el entrenamiento por cada método, representar gráficamente las respuestas utilizando 3 figuras en el espacio R^3 en donde cada documento esté representado por un punto. Por ejemplo, si la respuesta de la red es el vector Y ∈ R^9, la figura 1 tendrá por ejes a Y1,
