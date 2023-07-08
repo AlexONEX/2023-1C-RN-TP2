@@ -70,11 +70,9 @@ El objetivo es poder usar los textos representados en el formato Bag of Words pa
 
 ```{code-cell} ipython3
 r = requests.get("https://git.exactas.uba.ar/redes-neuronales/clases/-/raw/master/practicas/datos/tp2_training_dataset.csv")
-data = np.loadtxt(r.iter_lines(), delimiter=",")
+data_with_labels = np.loadtxt(r.iter_lines(), delimiter=",")
 
-
-labels = np.array([i for i in range(1, 10) for j in range(0, 100)]).reshape(900, 1)
-data_with_labels = np.hstack((data,  labels))
+data = data_with_labels[::,1:]
 ```
 
 #### Separamos el training set 
