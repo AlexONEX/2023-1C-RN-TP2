@@ -225,3 +225,39 @@ plot_components_in_3d(Y_sanger, training_idx, data_with_labels, "Regla de Sanger
 ```
 
 ### 2.2 Mapeo de características
+
+```{code-cell} ipython3
+W_kohonen = kohonen_map(training, 9, 1e-5, 1e-4, 1000)
+```
+
+```{code-cell} ipython3
+labels = np.arange(1, 10)
+M = 9
+active_categories = np.zeros((M, M), dtype=int)
+
+## Por cada instancia se fija cual es el elemento de la matriz W que mas se parece y se le asigna la categoría correspondiente
+for i in range(len(training)):
+    instance = training[i]
+    expanded_instance = np.expand_dims(instance, axis=(0, 1))
+    e = expanded_instance - W_kohonen
+    n = np.linalg.norm(e, axis=2)
+    p = np.unravel_index(np.argmin(n), n.shape)
+    active_categories[p] = data_with_labels[:,0][i]
+
+## Se grafica el mapa de características
+fig, ax = plt.subplots(figsize=(8, 8))
+cax = ax.matshow(active_categories, cmap='viridis')
+
+ax.set_xticks(np.arange(M))
+ax.set_yticks(np.arange(M))
+ax.set_xlabel('Unidad de salida X')
+ax.set_ylabel('Unidad de salida Y')
+
+### Leyenda de colores
+cmap = plt.cm.get_cmap('viridis', len(labels))
+legend_elements = [plt.Rectangle((0, 0), 1, 1, color=cmap(i)) for i in range(len(labels))]
+ax.legend(legend_elements, labels, loc='upper right')
+
+plt.title('Mapa de características')
+plt.show()
+```
