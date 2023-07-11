@@ -57,6 +57,7 @@ for epoch in range(epochs):
         dw = learning_rate * pf * e
         w += dw
 
+
 # Visualización de los pesos
 labels = sorted(categories.unique())
 active_categories = np.zeros((M, M), dtype=int)
