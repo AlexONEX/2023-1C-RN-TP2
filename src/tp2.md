@@ -249,7 +249,6 @@ El objetivo es poder usar los textos representados en el formato Bag of Words pa
 ```{code-cell} ipython3
 r = requests.get("https://git.exactas.uba.ar/redes-neuronales/clases/-/raw/master/practicas/datos/tp2_training_dataset.csv")
 data_with_labels = np.loadtxt(r.iter_lines(), delimiter=",")
-
 data = data_with_labels[::,1:]
 ```
 
@@ -266,9 +265,9 @@ print("training data shape ", training.shape)
 print("eval data shape ", evaluation.shape)
 
 #Normalizamos 
+data_norm = (data- np.mean(data, axis = 0))/ np.std(data)
 training = (training- np.mean(training, axis = 0))/ np.std(training)
 #training = np.divide(training.T,training.sum(axis = 1)).T
-data_norm = (data- np.mean(data, axis = 0))/ np.std(data)
 ```
 
 ### 2.1 Reducción de dimensiones 
@@ -369,16 +368,34 @@ Al comparar los resultados de los dos conjuntos de parámetros de prueba, podemo
 
 ### 2.2 Mapeo de características
 
-En este punto utilizamos la técnica de mapas de Kohonen para encontrar clusters y poder clasificar datos nuevos. Esta técnica también es conocida como SOM. 
+En este punto utilizamos la técnica de mapas de Kohonen para encontrar clusters y poder clasificar datos nuevos de empresas por su actividad principal. Esta técnica también es conocida como SOM. 
+
+Primero entrenamos la red con los siguientes parametros: 
 
 ```{code-cell} ipython3
-W_kohonen,y_kohonen = kohonen_map(training, 9, lr_st= 1, lr_dr=0.01, ir_st =3, ir_dr=0.05, epochs= 1000)
+W_kohonen,y_kohonen = kohonen_map(training, 9, lr_st= 1, lr_dr=0.1, ir_st =3, ir_dr=0.05, epochs= 1000)
 ```
+
+Ahora para poder ver cuales son las neuronas que se activan más con los datos de cada clase podemos ver el mapa de características. Primero veamos esto para los datos del training set
 
 ```{code-cell} ipython3
 plot_category_maps(training, W_kohonen, data_with_labels[training_idx , 0])
 ```
 
+De forma equivalente podemos ver para cada instancia que neurona es la que más se activa y a que clase pertenece. Notar que los colores no quedaron iguales con respecto al gráfico anterior. Este gráfico nos sirve para ver que los clusters más marcados en el mapa de categorias son tambien los que sus instancias se encuentran menos mezcladas. Probablemente estas sean las clases que son más fáciles de separar o las que resultaron mejores para estos parametros. Otro punto interesante que podemos ver en este gráfico es que hay algunas regiones que tienen muchas intancias de distintos colores y probablemente corresponden con las fronteras entre los clusters. 
+
 ```{code-cell} ipython3
 plot_category_points(training,  W_kohonen, data_with_labels[training_idx , 0])
 ```
+
+Finalmente veamos si esto nos sirve para clasificar datos nuevos no vistos por el modelo. 
+
+```{code-cell} ipython3
+plot_category_maps(evaluation, W_kohonen, data_with_labels[~np.isin(np.arange(900),training_idx), 0])
+```
+
+```{code-cell} ipython3
+plot_category_points(evaluation, W_kohonen, data_with_labels[~np.isin(np.arange(900),training_idx), 0])
+```
+
+Como se puede ver la arquitectura planteada no generaliza bien para instancias no vistas durante el entrenamiento. Probablemente esto corresponde con que ajustamos tanto los parametros del modelo que terminamos overfitteando demasiado al training set. Para solucionar esto se podrían utilizar medidas para evaluar los clusters y así poder usar CV y evaluar muchos más modelos sin tener que ver uno por uno los mapas de características de cada arquitectura.
