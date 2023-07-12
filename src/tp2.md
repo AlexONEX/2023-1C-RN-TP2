@@ -267,6 +267,7 @@ print("eval data shape ", evaluation.shape)
 #Normalizamos 
 data_norm = (data- np.mean(data, axis = 0))/ np.std(data)
 training = (training- np.mean(training, axis = 0))/ np.std(training)
+evaluation = (evaluation- np.mean(training, axis = 0))/ np.std(training)
 #training = np.divide(training.T,training.sum(axis = 1)).T
 ```
 
